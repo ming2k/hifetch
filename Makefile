@@ -1,16 +1,23 @@
 CC = gcc
 CFLAGS = -Wall -Wextra
+TARGET = hifetch
 
-all: hifetch
+.PHONY: all clean install
 
-hifetch: main.o utils.o
-	$(CC) $(CFLAGS) -o hifetch main.o utils.o
+all: $(TARGET)
+
+$(TARGET): main.o utils.o
+	$(CC) $(CFLAGS) $^ -o $@
 
 main.o: main.c utils.h
-	$(CC) $(CFLAGS) -c main.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 utils.o: utils.c utils.h
-	$(CC) $(CFLAGS) -c utils.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f *.o hifetch
+	rm -f *.o $(TARGET)
+
+install:
+	install -D -m 755 $(TARGET) $(DESTDIR)/usr/bin/$(TARGET)
+
